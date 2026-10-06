@@ -1,0 +1,10 @@
+{
+  "name": "atelier-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "vite", "build": "vite build", "preview": "vite preview" },
+  "dependencies": { "@vitejs/plugin-react": "^5.0.0", "gsap": "^3.14.2", "react": "^19.1.0", "react-dom": "^19.1.0" },
+  "devDependencies": { "vite": "^7.0.0" }
+}
+
