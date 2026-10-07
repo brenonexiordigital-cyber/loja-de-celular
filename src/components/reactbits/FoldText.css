@@ -25,6 +25,10 @@
   display: inline;
 }
 
+.fold-text-visual wbr {
+  display: none;
+}
+
 .fold-text-line {
   display: block;
 }

@@ -98,7 +98,16 @@ function PhoneCarousel() {
   const sectionRef = useRef(null);
   const [entered, setEntered] = useState(false);
   const [activePhone, setActivePhone] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(() => window.innerWidth);
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mobileViewport = viewportWidth <= 680;
+
+  useEffect(() => {
+    const updateWidth = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', updateWidth, { passive: true });
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -134,14 +143,14 @@ function PhoneCarousel() {
             items={showroomPhones}
             preset="cylinder"
             intro={reducedMotion ? 'none' : 'rise'}
-            cardWidth={270}
+            cardWidth={mobileViewport ? Math.min(340, Math.max(248, viewportWidth * 0.8)) : 270}
             aspectRatio={0.62}
             gap={34}
-            autoplay={reducedMotion ? 'off' : 'drift'}
+            autoplay={mobileViewport || reducedMotion ? 'off' : 'drift'}
             speed={4.2}
             direction="left"
             draggable
-            momentum={0.42}
+            momentum={mobileViewport ? 0.62 : 0.42}
             snap
             pauseOnHover
             focusOnClick

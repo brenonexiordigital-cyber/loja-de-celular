@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -18,17 +18,17 @@ const HINGE_CONFIG = {
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 const renderWhitespace = (value, key) =>
-  value.split(/(\n)/).map((part, index) => {
-    if (part === '\n') return <br key={`${key}-br-${index}`} />;
-    if (!part) return null;
+  value.split(/(\n)/).flatMap((part, index) => {
+    if (part === '\n') return [<br key={`${key}-br-${index}`} />];
+    if (!part) return [];
 
-    return (
-      <span className="fold-text-whitespace" key={`${key}-space-${index}`}>
-        {part.replace(/ /g, '\u00A0')}
-      </span>
-    );
+    return [
+      <Fragment key={`${key}-space-${index}`}>
+        <span className="fold-text-whitespace">{part.replace(/ /g, '\u00A0')}</span>
+        <wbr />
+      </Fragment>
+    ];
   });
-
 const FoldText = ({
   text = 'Design unfolds',
   splitBy = 'char',
