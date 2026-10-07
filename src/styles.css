@@ -7,3 +7,22 @@
 
 html,body{overflow-x:clip}
 @media(max-width:600px){.feature-image-wrap{min-height:0;width:100%;aspect-ratio:1/.86}}
+
+.loading-experience{position:fixed;inset:0;z-index:50;display:grid;place-items:center;overflow:hidden;isolation:isolate;background:#f5f5f7;color:#171614}
+.loading-product-stage{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse at 48% 43%,#fff9 0%,transparent 48%)}
+.loading-product{position:relative;z-index:1;width:auto;height:min(78svh,800px);max-width:76vw;object-fit:contain;mix-blend-mode:multiply;transform-origin:24.5% 12.8%;will-change:transform,opacity}
+.loading-aperture{position:absolute;z-index:2;top:50%;left:50%;width:150vmax;height:150vmax;border-radius:50%;opacity:0;visibility:hidden;transform:translate(-50%,-50%) scale(.01);background:radial-gradient(circle,#10100f 0 46%,#211d18 54%,#b8aa96 56%,#10100f 58%);pointer-events:none;will-change:transform,opacity}
+.loading-wordmark{position:absolute;z-index:4;top:30px;left:6.2vw;display:flex;align-items:center;gap:11px;font-size:9px;line-height:1.18;letter-spacing:.15em;font-weight:700;color:#211f1c}
+.loading-wordmark .wordmark-mark{color:#8a755d}
+.loading-skip{position:absolute;z-index:4;top:30px;right:6.2vw;display:flex;align-items:center;gap:16px;padding:10px 0;border:0;border-bottom:1px solid #aaa49b;background:transparent;color:#34312d;font:500 10px 'DM Sans',sans-serif;cursor:pointer}
+.loading-skip span{font-size:14px}
+.loading-skip:focus-visible,.loading-wordmark:focus-visible{outline:2px solid #766149;outline-offset:5px}
+.loading-caption{position:absolute;z-index:4;bottom:8vh;left:20px;right:20px;display:grid;justify-items:center;gap:8px;text-align:center;color:#292622}
+.loading-caption p{margin:0 0 3px;font-size:8px;font-weight:600;letter-spacing:.2em;color:#736d65}
+.loading-caption p span{padding:0 5px;color:#ae8560}
+.loading-caption strong{font:500 clamp(22px,3vw,34px)/1.1 'Manrope',sans-serif;letter-spacing:-.045em}
+.loading-caption>span{font-size:10px;letter-spacing:.08em;color:#77716a}
+@media(max-width:600px){.loading-wordmark{top:22px;left:7vw}.loading-skip{top:22px;right:7vw}.loading-product{height:min(72svh,720px);max-width:90vw}.loading-caption{bottom:8vh}.loading-caption p{font-size:7px;letter-spacing:.16em}.loading-caption strong{font-size:25px}}
+@media(max-height:600px){.loading-product{height:55svh}.loading-caption{bottom:4vh;gap:5px}.loading-caption strong{font-size:21px}.loading-caption>span{font-size:9px}}
+.hero h1:focus{outline:none}
+@media(prefers-reduced-motion:reduce){.loading-product,.loading-aperture{will-change:auto}}

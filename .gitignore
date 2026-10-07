@@ -2,3 +2,14 @@ node_modules/
 dist/
 .env*
 !.env.example
+.vercel/
+.netlify/
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+credentials*.json
+service-account*.json

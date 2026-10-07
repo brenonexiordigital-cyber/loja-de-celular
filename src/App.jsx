@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import LoadingExperience from './LoadingExperience.jsx';
 
 const categories = [
   { title: 'iPhone', note: 'A experiência Apple', image: '/images/store-iphone.jpg', href: '#colecao' },
@@ -70,6 +71,7 @@ export default function App() {
   }, []);
   const closeMenu = () => setMenuOpen(false);
   return <>
+    <LoadingExperience />
     <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress / 100})` }} />
     <header className="site-header">
       <a className="wordmark" href="#top" aria-label="Atelier Mobile, início"><span className="wordmark-mark">A.</span><span>ATELIER<br />MOBILE</span></a>
@@ -78,7 +80,7 @@ export default function App() {
     </header>
     <main id="top">
       <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-copy"><p className="eyebrow"><i /> CURADORIA DE TECNOLOGIA · DESDE O PRIMEIRO TOQUE</p><h1 id="hero-title">Tecnologia,<br /><em>com intenção.</em></h1><p className="hero-description">Dispositivos que fazem mais sentido para o seu jeito de viver. Uma curadoria pessoal de smartphones e acessórios.</p><a className="button button-light" href="#colecao">Descobrir a coleção <span>↘</span></a></div>
+        <div className="hero-copy"><p className="eyebrow"><i /> CURADORIA DE TECNOLOGIA · DESDE O PRIMEIRO TOQUE</p><h1 id="hero-title" tabIndex="-1">Tecnologia,<br /><em>com intenção.</em></h1><p className="hero-description">Dispositivos que fazem mais sentido para o seu jeito de viver. Uma curadoria pessoal de smartphones e acessórios.</p><a className="button button-light" href="#colecao">Descobrir a coleção <span>↘</span></a></div>
         <div className="hero-visual" aria-label="Seleção de cores de iPhone"><div className="visual-glow" /><div className="visual-ring ring-one" /><div className="visual-ring ring-two" /><img ref={heroPhone} className="hero-product" src="/images/iphone-colors.jpg" alt="Quatro opções de acabamento para smartphone" /><span className="visual-caption">UMA NOVA PERSPECTIVA<br />A CADA DETALHE</span><span className="visual-coordinate">FIG. 01 — IPHONE</span></div>
         <div className="hero-meta"><span>01 / 04</span><span>ENCONTRE SEU PRÓXIMO</span><span>SCROLL PARA EXPLORAR ↓</span></div>
       </section>
