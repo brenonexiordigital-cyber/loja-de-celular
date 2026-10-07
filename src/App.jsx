@@ -1,102 +1,317 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import CircularCarousel from './components/reactbits/CircularCarousel.jsx';
+import FoldText from './components/reactbits/FoldText.jsx';
 import LoadingExperience from './LoadingExperience.jsx';
+import { proFinishes, showroomPhones, storeCategories } from './data/phones.js';
 
-const categories = [
-  { title: 'iPhone', note: 'A experiência Apple', image: '/images/store-iphone.jpg', href: '#colecao' },
-  { title: 'Samsung', note: 'Feito para ir além', image: '/images/iphone-colors.jpg', href: '#colecao' },
-  { title: 'Xiaomi', note: 'Tecnologia sem pausa', image: '/images/store-cases.jpg', href: '#colecao' },
-  { title: 'Motorola', note: 'Seu ritmo, suas regras', image: '/images/store-accessories.jpg', href: '#colecao' },
-  { title: 'Acessórios', note: 'O detalhe faz diferença', image: '/images/store-accessories.jpg', href: '#acessorios' },
-  { title: 'Ofertas', note: 'Novas possibilidades', image: '/images/store-cases.jpg', href: '#colecao' },
-];
+function SiteHeader() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = () => setMenuOpen(false);
 
-function FlowingMenu() {
-  const [active, setActive] = useState(null);
-  const imageRef = useRef(null);
-  const activeItem = active == null ? null : categories[active];
-  useEffect(() => {
-    if (!imageRef.current || !activeItem) return;
-    gsap.fromTo(imageRef.current, { opacity: 0, scale: 1.035, y: 12 }, { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: 'power3.out' });
-  }, [activeItem]);
-  return <div className="category-layout">
-    <nav className="flowing-menu" aria-label="Explore por categoria">
-      {categories.map((item, index) => <a key={item.title} href={item.href} className={`flowing-item ${active === index ? 'is-active' : ''}`} onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} onClick={() => setActive(index)}>
-        <span className="flowing-index">0{index + 1}</span><span className="flowing-title">{item.title}</span><span className="flowing-note">{item.note}</span><span className="flowing-arrow" aria-hidden="true">↗</span>
-      </a>)}
-    </nav>
-    <div className="category-image" aria-live="polite">
-      {activeItem ? <img ref={imageRef} src={activeItem.image} alt={`Ambiente de ${activeItem.title}`} /> : <img src="/images/store-cases.jpg" alt="Parede de capas e acessórios selecionados" />}
-      <div className="category-image-caption"><span>EM DESTAQUE</span><strong>{activeItem?.title || 'Encontre o que combina com você'}</strong></div>
-    </div>
-  </div>;
+  return (
+    <header className="site-header">
+      <a className="wordmark" href="#top" aria-label="Atelier Mobile, início">
+        <span className="wordmark-mark">A.</span><span>ATELIER<br />MOBILE</span>
+      </a>
+      <button
+        className="menu-toggle"
+        type="button"
+        aria-expanded={menuOpen}
+        aria-controls="main-navigation"
+        aria-label={menuOpen ? 'Fechar navegação' : 'Abrir navegação'}
+        onClick={() => setMenuOpen(open => !open)}
+      ><span /><span /></button>
+      <nav id="main-navigation" className={`main-nav ${menuOpen ? 'nav-open' : ''}`} aria-label="Navegação principal">
+        <a href="#showroom" onClick={closeMenu}>Vitrine</a>
+        <a href="#experiencias" onClick={closeMenu}>Experiências</a>
+        <a href="#escolha" onClick={closeMenu}>Escolha</a>
+        <a className="nav-cta" href="#categorias" onClick={closeMenu}>Explorar <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+  );
 }
 
-function MaskedHeading({ text, src }) {
-  const ref = useRef(null);
+function Hero({ phoneRef }) {
+  return (
+    <section className="hero" aria-labelledby="hero-title">
+      <div className="hero-copy">
+        <p className="eyebrow"><i /> ATELIER MOBILE <span>·</span> CURADORIA DE SMARTPHONES</p>
+        <h1 id="hero-title" tabIndex="-1">Tecnologia<br /><em>em primeiro plano.</em></h1>
+        <div className="hero-bottomline">
+          <p>Uma vitrine para olhar de perto, comparar com calma e escolher com intenção.</p>
+          <a className="hero-link" href="#intro">Entrar na experiência <span aria-hidden="true">↓</span></a>
+        </div>
+      </div>
+      <figure className="hero-art">
+        <span className="hero-art-index">iPhone 17 Pro Max <i>·</i> Laranja</span>
+        <img ref={phoneRef} className="hero-phone" src="/images/iphone-17-pro-max-orange.jpg" alt="Traseira laranja do iPhone 17 Pro Max" fetchPriority="high" />
+        <figcaption>UM ESTUDO DE LUZ<br />E SUPERFÍCIE</figcaption>
+      </figure>
+      <div className="hero-foot" aria-hidden="true"><span>01 — ATELIER MOBILE</span><span>DESLIZE PARA DESCOBRIR</span></div>
+    </section>
+  );
+}
+
+function EditorialIntro() {
+  return (
+    <section id="intro" className="editorial-intro" aria-labelledby="intro-title">
+      <p className="eyebrow">UMA ESCOLHA PESSOAL</p>
+      <div className="editorial-intro-body">
+        <h2 id="intro-title">Não é só o que cabe na mão.<br /><em>É o que cabe na sua vida.</em></h2>
+        <div className="editorial-intro-aside">
+          <span className="editorial-rule" aria-hidden="true" />
+          <p>Reunimos imagens e aparelhos já presentes nesta vitrine para que cada detalhe apareça antes da escolha.</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FoldInterlude() {
+  return (
+    <section className="fold-interlude" aria-labelledby="fold-heading">
+      <div className="fold-interlude-meta"><span>UM OLHAR MAIS PRÓXIMO</span><span>ATELIER MOBILE</span></div>
+      <h2 id="fold-heading" className="fold-heading">
+        <FoldText
+          text="Cada detalhe muda a experiência."
+          splitBy="word"
+          hinge="top"
+          trigger="scroll"
+          duration={0.6}
+          stagger={0.055}
+          ease="power3.out"
+          perspective={850}
+          creaseShading={0.38}
+          fontSize="clamp(2.55rem, 9.5vw, 9rem)"
+          fontWeight={600}
+          color="#f5f2ec"
+          className="fold-heading-text"
+        />
+      </h2>
+      <p className="fold-interlude-note">Uma seleção visual para descobrir o que chama seu olhar.</p>
+    </section>
+  );
+}
+
+function PhoneCarousel() {
+  const sectionRef = useRef(null);
+  const [entered, setEntered] = useState(false);
+  const [activePhone, setActivePhone] = useState(0);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   useEffect(() => {
-    if (!ref.current || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const tween = gsap.fromTo(ref.current, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.inOut' });
-    const observer = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { tween.play(); observer.disconnect(); } }, { threshold: 0.3 });
-    tween.pause(); observer.observe(ref.current);
-    return () => { observer.disconnect(); tween.kill(); };
-  }, []);
-  return <h2 className="masked-heading" ref={ref} aria-label={text} style={{ backgroundImage: `url(${src})` }}><span>{text}</span></h2>;
+    const node = sectionRef.current;
+    if (!node) return undefined;
+    if (reducedMotion || !('IntersectionObserver' in window)) {
+      setEntered(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setEntered(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '120px 0px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [reducedMotion]);
+
+  const selected = showroomPhones[activePhone] || showroomPhones[0];
+
+  return (
+    <section id="showroom" className="carousel-section" ref={sectionRef} aria-labelledby="showroom-title">
+      <div className="carousel-heading">
+        <div>
+          <p className="eyebrow">O CENTRO DA VITRINE</p>
+          <h2 id="showroom-title">Olhe de<br /><em>todos os lados.</em></h2>
+        </div>
+        <p>Arraste para girar. Escolha uma peça para revelar os detalhes disponíveis.</p>
+      </div>
+      <div className="carousel-stage-shell">
+        {entered ? (
+          <CircularCarousel
+            items={showroomPhones}
+            preset="cylinder"
+            intro={reducedMotion ? 'none' : 'rise'}
+            cardWidth={270}
+            aspectRatio={0.62}
+            gap={34}
+            autoplay={reducedMotion ? 'off' : 'drift'}
+            speed={4.2}
+            direction="left"
+            draggable
+            momentum={0.42}
+            snap
+            pauseOnHover
+            focusOnClick
+            parallax={0.08}
+            stretch={0.08}
+            depthFade={0.28}
+            fadeColor="#f0eee9"
+            innerShade={0.24}
+            cornerRadius={3}
+            captions
+            ariaLabel="Vitrine circular de smartphones"
+            onChange={setActivePhone}
+            onItemClick={(item, index) => setActivePhone(index)}
+            className="atelier-carousel"
+          />
+        ) : <div className="carousel-placeholder" aria-hidden="true" />}
+      </div>
+      <div className="carousel-selection" aria-live="polite" aria-atomic="true">
+        <span className="selection-kicker">EM FOCO</span>
+        <div className="carousel-selection-copy"><strong>{selected.title}</strong><span>{selected.subtitle}</span></div>
+        <p>{selected.summary}</p>
+        <a href="#escolha">Explorar as opções <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  );
+}
+
+function ProductShowroom() {
+  return (
+    <section className="product-showroom" aria-labelledby="product-showroom-title">
+      <div className="product-showroom-art">
+        <img src="/images/iphone-colors.jpg" alt="Quatro aparelhos em acabamentos escuro, claro, azul e vinho" loading="lazy" />
+        <span className="image-caption">QUATRO ACABAMENTOS NA MESMA COMPOSIÇÃO</span>
+      </div>
+      <div className="product-showroom-copy">
+        <p className="eyebrow">A VITRINE, SEM PRESSA</p>
+        <h2 id="product-showroom-title">Presenças<br /><em>para se aproximar.</em></h2>
+        <p>As imagens disponíveis mostram o aparelho por inteiro e em conjunto. Explore a seleção sem fichas técnicas ou valores que ainda não foram informados.</p>
+        <a className="line-link" href="#escolha">Escolher uma apresentação <span aria-hidden="true">↘</span></a>
+      </div>
+    </section>
+  );
+}
+
+function Experiences() {
+  const [finishIndex, setFinishIndex] = useState(0);
+  const finish = proFinishes[finishIndex];
+
+  return (
+    <section id="experiencias" className="experiences" aria-label="Experiências de produto">
+      <div className="experience-intro"><p className="eyebrow">MATÉRIA, LUZ, PRESENÇA</p><h2>Quatro maneiras<br />de se aproximar.</h2></div>
+
+      <article className="experience-camera" aria-labelledby="camera-title">
+        <div className="camera-visual"><img src="/images/iphone-17-pro-max-orange.jpg" alt="Detalhe do conjunto de câmeras do iPhone 17 Pro Max laranja" loading="lazy" /><span>VIDRO · LUZ · PROFUNDIDADE</span></div>
+        <div className="camera-copy"><p className="eyebrow">01 / CÂMERA</p><h3 id="camera-title">Um olhar<br /><em>mais perto.</em></h3><p>O módulo de câmeras em primeiro plano, observado na própria imagem do aparelho.</p></div>
+      </article>
+
+      <article className="experience-display" aria-labelledby="display-title">
+        <div className="display-copy"><p className="eyebrow">02 / DISPLAY</p><h3 id="display-title">Uma janela<br />para <em>o que vem.</em></h3><p>Um render fornecido mostra o aparelho dos dois lados. O modelo não está identificado no arquivo.</p><span className="display-caption">FRENTE E VERSO <i>·</i> AZUL</span></div>
+        <div className="display-visual"><img src="/images/smartphone-display-blue.webp" alt="Smartphone azul mostrado pela frente e pela traseira" loading="lazy" /></div>
+      </article>
+
+      <article className="experience-performance" aria-labelledby="performance-title">
+        <div className="performance-copy"><p className="eyebrow">03 / PERFORMANCE</p><h3 id="performance-title">Feito para<br /><em>acompanhar.</em></h3><p>Sem números ou especificações inventados: apenas espaço para o aparelho e para o seu ritmo.</p><span className="performance-mark" aria-hidden="true">↗</span></div>
+        <div className="performance-visual"><img src="/images/store-iphone.jpg" alt="Vitrine física com comunicação visual de iPhone 17 Pro" loading="lazy" /><span>iPhone 17 Pro <i>·</i> NA VITRINE</span></div>
+      </article>
+
+      <article className="experience-finishes" aria-labelledby="finishes-title">
+        <div className="finishes-copy"><p className="eyebrow">04 / ACABAMENTO</p><h3 id="finishes-title">A cor também<br /><em>é escolha.</em></h3><p>Quatro tonalidades visíveis na composição disponível.</p>
+          <div className="finish-picker" role="group" aria-label="Selecionar acabamento">
+            {proFinishes.map((option, index) => <button key={option.id} type="button" aria-label={`Selecionar acabamento ${option.name}`} aria-pressed={finishIndex === index} style={{ '--swatch': option.color }} onClick={() => setFinishIndex(index)} />)}
+            <span aria-live="polite">{finish.name}</span>
+          </div>
+        </div>
+        <div className="finishes-visual"><img src="/images/iphone-colors.jpg" alt={`Composição de quatro aparelhos; acabamento em foco: ${finish.name}`} loading="lazy" /><span>ESCOLHA PELO QUE VOCÊ VÊ</span></div>
+      </article>
+    </section>
+  );
+}
+
+function PhoneSelection() {
+  const [selected, setSelected] = useState(0);
+  const phone = showroomPhones[selected] || showroomPhones[0];
+
+  return (
+    <section id="escolha" className="phone-selection" aria-labelledby="selection-title">
+      <div className="selection-header">
+        <p className="eyebrow">ESCOLHA A APRESENTAÇÃO</p>
+        <h2 id="selection-title">O que chamou<br /><em>seu olhar?</em></h2>
+        <p>Explore as imagens reais disponíveis. Quando novos modelos e informações forem definidos, eles podem entrar nesta mesma vitrine.</p>
+      </div>
+      <div className="selection-showcase">
+        <div className="selection-image-wrap"><img key={phone.id} src={phone.src} alt={phone.alt} loading="lazy" /></div>
+        <div className="selection-details" aria-live="polite" aria-atomic="true">
+          <span className="selection-kicker">APRESENTAÇÃO {String(selected + 1).padStart(2, '0')}</span>
+          <h3>{phone.title}</h3><p>{phone.subtitle}</p><small>{phone.summary}</small>
+          <div className="selection-options" role="group" aria-label="Escolher aparelho ou imagem">
+            {showroomPhones.map((option, index) => <button key={option.id} type="button" className={selected === index ? 'is-selected' : ''} aria-pressed={selected === index} onClick={() => setSelected(index)}><span>{String(index + 1).padStart(2, '0')}</span>{option.title}</button>)}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Categories() {
+  return (
+    <section id="categorias" className="categories" aria-labelledby="categories-title">
+      <div className="categories-heading"><p className="eyebrow">ATELIER MOBILE</p><h2 id="categories-title">Um espaço para<br /><em>descobrir.</em></h2></div>
+      <div className="category-rail">
+        {storeCategories.map((category, index) => <a className={`category-item category-item-${index + 1}`} href={index === 0 ? '#showroom' : index === 1 ? '#experiencias' : '#escolha'} key={category.id}>
+          <img src={category.image} alt={category.alt} loading="lazy" />
+          <span className="category-item-copy"><strong>{category.title}</strong><small>{category.note}</small></span><span className="category-arrow" aria-hidden="true">↗</span>
+        </a>)}
+      </div>
+    </section>
+  );
 }
 
 export default function App() {
-  const [selected, setSelected] = useState(0);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const heroPhone = useRef(null);
-  const colors = ['#111313', '#dedbd4', '#9bb7e5', '#7c344e'];
+
   useEffect(() => {
     const onScroll = () => setScrollProgress(Math.min(100, window.scrollY / (document.documentElement.scrollHeight - innerHeight || 1) * 100));
-    addEventListener('scroll', onScroll, { passive: true });
-    return () => removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
   useEffect(() => {
     const node = heroPhone.current;
-    if (!node || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const media = matchMedia('(pointer: fine)');
-    const onMove = e => {
+    if (!node || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    const media = window.matchMedia('(pointer: fine)');
+    const onMove = event => {
       const box = node.getBoundingClientRect();
-      const x = (e.clientX - box.left) / box.width - 0.5;
-      const y = (e.clientY - box.top) / box.height - 0.5;
-      gsap.to(node, { rotateY: x * 8, rotateX: -y * 6, duration: 0.7, ease: 'power2.out' });
+      const x = (event.clientX - box.left) / box.width - 0.5;
+      const y = (event.clientY - box.top) / box.height - 0.5;
+      gsap.to(node, { rotateY: x * 5, rotateX: -y * 4, duration: 0.8, ease: 'power2.out' });
     };
     const onLeave = () => gsap.to(node, { rotateX: 0, rotateY: 0, duration: 0.8, ease: 'power3.out' });
-    if (media.matches) { node.addEventListener('pointermove', onMove); node.addEventListener('pointerleave', onLeave); }
-    return () => { node.removeEventListener('pointermove', onMove); node.removeEventListener('pointerleave', onLeave); gsap.killTweensOf(node); };
+    if (media.matches) {
+      node.addEventListener('pointermove', onMove);
+      node.addEventListener('pointerleave', onLeave);
+    }
+    return () => {
+      node.removeEventListener('pointermove', onMove);
+      node.removeEventListener('pointerleave', onLeave);
+      gsap.killTweensOf(node);
+    };
   }, []);
-  const closeMenu = () => setMenuOpen(false);
+
   return <>
     <LoadingExperience />
-    <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress / 100})` }} />
-    <header className="site-header">
-      <a className="wordmark" href="#top" aria-label="Atelier Mobile, início"><span className="wordmark-mark">A.</span><span>ATELIER<br />MOBILE</span></a>
-      <button className="menu-toggle" aria-expanded={menuOpen} aria-label={menuOpen ? 'Fechar navegação' : 'Abrir navegação'} onClick={() => setMenuOpen(!menuOpen)}><span /><span /></button>
-      <nav className={`main-nav ${menuOpen ? 'nav-open' : ''}`} aria-label="Navegação principal"><a href="#colecao" onClick={closeMenu}>Coleção</a><a href="#universo" onClick={closeMenu}>Universo</a><a href="#acessorios" onClick={closeMenu}>Acessórios</a><a className="nav-cta" href="#colecao" onClick={closeMenu}>Explorar <span>↗</span></a></nav>
-    </header>
+    <div className="scroll-progress" style={{ transform: `scaleX(${scrollProgress / 100})` }} aria-hidden="true" />
+    <SiteHeader />
     <main id="top">
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-copy"><p className="eyebrow"><i /> CURADORIA DE TECNOLOGIA · DESDE O PRIMEIRO TOQUE</p><h1 id="hero-title" tabIndex="-1">Tecnologia,<br /><em>com intenção.</em></h1><p className="hero-description">Dispositivos que fazem mais sentido para o seu jeito de viver. Uma curadoria pessoal de smartphones e acessórios.</p><a className="button button-light" href="#colecao">Descobrir a coleção <span>↘</span></a></div>
-        <div className="hero-visual" aria-label="Seleção de cores de iPhone"><div className="visual-glow" /><div className="visual-ring ring-one" /><div className="visual-ring ring-two" /><img ref={heroPhone} className="hero-product" src="/images/iphone-colors.jpg" alt="Quatro opções de acabamento para smartphone" /><span className="visual-caption">UMA NOVA PERSPECTIVA<br />A CADA DETALHE</span><span className="visual-coordinate">FIG. 01 — IPHONE</span></div>
-        <div className="hero-meta"><span>01 / 04</span><span>ENCONTRE SEU PRÓXIMO</span><span>SCROLL PARA EXPLORAR ↓</span></div>
-      </section>
-      <section id="colecao" className="collection section-pad">
-        <div className="section-heading"><div><p className="eyebrow">ESCOLHA COM CALMA</p><h2>O próximo capítulo<br />começa <em>por aqui.</em></h2></div><p className="section-aside">Uma seleção pensada para durar.<br />Encontre a tecnologia que acompanha<br />o seu cotidiano.</p></div>
-        <FlowingMenu />
-      </section>
-      <section id="universo" className="statement-section"><div className="statement-top"><span>OBJETOS FEITOS PARA FICAR</span><span>ATELIER MOBILE — SELEÇÃO Nº 01</span></div><MaskedHeading text="TECNOLOGIA QUE VOCÊ SENTE" src="/images/store-iphone.jpg" /><div className="statement-bottom"><span>Design é o que você vê.</span><span>Experiência é o que fica.</span></div></section>
-      <section className="feature section-pad">
-        <div className="feature-image-wrap"><img src="/images/iphone-colors.jpg" alt="Smartphones em quatro acabamentos distintos" loading="lazy" /><span className="image-index">01 — ACABAMENTOS</span></div>
-        <div className="feature-copy"><p className="eyebrow">UMA ESCOLHA PESSOAL</p><h2>Seu olhar.<br />Sua <em>assinatura.</em></h2><p>Quatro acabamentos, quatro maneiras de levar sua tecnologia pelo mundo. Qual conversa com você?</p><div className="color-selector" role="group" aria-label="Selecionar acabamento"><button aria-label="Ver acabamento escuro" aria-pressed={selected === 0} style={{ '--swatch': colors[0] }} onClick={() => setSelected(0)} /><button aria-label="Ver acabamento claro" aria-pressed={selected === 1} style={{ '--swatch': colors[1] }} onClick={() => setSelected(1)} /><button aria-label="Ver acabamento azul" aria-pressed={selected === 2} style={{ '--swatch': colors[2] }} onClick={() => setSelected(2)} /><button aria-label="Ver acabamento vinho" aria-pressed={selected === 3} style={{ '--swatch': colors[3] }} onClick={() => setSelected(3)} /><span>{['Meia-noite', 'Prateado', 'Azul', 'Vinho'][selected]}</span></div><a href="#contato" className="text-link">Consultar disponibilidade <span>↗</span></a></div>
-      </section>
-      <section id="acessorios" className="accessories section-pad"><div className="accessories-copy"><p className="eyebrow">O UNIVERSO AO REDOR</p><h2>O detalhe<br />muda <em>tudo.</em></h2><p>Capas, proteção e acessórios escolhidos para fazer parte do seu dia — e do seu dispositivo.</p><a className="button button-outline" href="#contato">Explorar acessórios <span>↗</span></a></div><div className="accessories-photo"><img src="/images/store-accessories.jpg" alt="Acessórios para smartphones organizados em uma parede de exposição" loading="lazy" /><span>PEÇAS PARA O SEU DIA A DIA</span></div></section>
-      <section className="store-note"><div className="store-note-image"><img src="/images/store-iphone.jpg" alt="Espaço de demonstração de produtos na loja" loading="lazy" /></div><div><p className="eyebrow">EXPERIÊNCIA, DE PERTO</p><h2>Escolher também<br />é <em>experimentar.</em></h2><p>Conheça os dispositivos, compare acabamentos e encontre a opção que faz sentido para você.</p><a href="#contato" className="text-link">Fale com a equipe <span>↗</span></a></div></section>
-      <section id="contato" className="contact section-pad"><p className="eyebrow">VAMOS ENCONTRAR O SEU?</p><h2>Uma boa escolha<br />começa com <em>uma conversa.</em></h2><a href="#top" className="button button-light">Voltar ao início <span>↑</span></a><p className="contact-note">Para consultar preços e disponibilidade, entre em contato com a equipe da loja.</p></section>
+      <Hero phoneRef={heroPhone} />
+      <EditorialIntro />
+      <FoldInterlude />
+      <PhoneCarousel />
+      <ProductShowroom />
+      <Experiences />
+      <PhoneSelection />
+      <Categories />
     </main>
-    <footer className="site-footer"><a className="wordmark" href="#top"><span className="wordmark-mark">A.</span><span>ATELIER<br />MOBILE</span></a><span>TECNOLOGIA, COM INTENÇÃO.</span><a href="#top">VOLTAR AO TOPO ↑</a><small>© {new Date().getFullYear()} ATELIER MOBILE</small></footer>
+    <footer className="site-footer">
+      <a className="wordmark" href="#top" aria-label="Atelier Mobile, voltar ao início"><span className="wordmark-mark">A.</span><span>ATELIER<br />MOBILE</span></a>
+      <p>TECNOLOGIA EM PRIMEIRO PLANO.</p>
+      <a href="#top">VOLTAR AO TOPO ↑</a>
+      <small>© {new Date().getFullYear()} ATELIER MOBILE</small>
+    </footer>
   </>;
 }
